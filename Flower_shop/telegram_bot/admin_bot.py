@@ -5,8 +5,8 @@ from aiogram.filters import Command
 from aiogram.types import ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeyboardButton
 
 # Настройки
-API_TOKEN = '7423076499:AAH5I_8iaOleEvoosfdlwVcPhKem03WMnwE'  # Замените на токен от @BotFather
-ADMIN_PANEL_URL = 'http://127.0.0.1:8000/admin/login/?next=/admin/'  # Ваш URL админки
+API_TOKEN = 'YOUR_TOKEN'  # Замените на токен от @BotFather
+ADMIN_PANEL_URL = 'YOUR_URL'  # Ваш URL админки
 
 # Инициализация бота
 bot = Bot(token=API_TOKEN)
