@@ -1,0 +1,143 @@
+{% extends 'catalog/base.html' %}
+{% load static %}
+
+{% block title %}Оформление заказа{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <!-- Левая колонка - товары в корзине -->
+        <div class="col-md-7 mb-4">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="bi bi-cart-check"></i> Ваш заказ</h4>
+                </div>
+
+                <div class="card-body">
+                    {% for item in request.user.cart.items.all %}
+                    <div class="row align-items-center mb-3">
+                        <div class="col-3">
+                            <img src="{{ item.flower.image.url }}"
+                                 class="img-fluid rounded"
+                                 alt="{{ item.flower.name }}"
+                                 height=50 width=50>
+                        </div>
+                        <div class="col-6">
+                            <h5>{{ item.flower.name }}</h5>
+                            <div class="d-flex align-items-center">
+                                <span class="badge bg-secondary me-2">
+                                    {{ item.quantity }} шт.
+                                </span>
+                                <span class="text-muted">
+                                    {{ item.flower.price }} руб./шт.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-3 text-end">
+                            <span class="fw-bold">
+                                {{ item.total_price }} руб.
+                            </span>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                    <hr>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5>Общая сумма:</h5>
+                        <h4 class="text-primary">{{ request.user.cart.total_price }} руб.</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Правая колонка - форма оформления -->
+        <div class="col-md-5">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0"><i class="bi bi-truck"></i> Данные для доставки</h4>
+                </div>
+
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <!-- Поле адреса -->
+                        <div class="mb-3">
+                            <label class="form-label">Адрес доставки</label>
+                            <textarea name="delivery_address"
+                                      class="form-control {% if form.delivery_address.errors %}is-invalid{% endif %}"
+                                      rows="3"
+                                      placeholder="Укажите полный адрес доставки"
+                                      required>{{ form.delivery_address.value|default:request.user.address }}</textarea>
+                            {% for error in form.delivery_address.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Поле телефона -->
+                        <div class="mb-4">
+                            <label class="form-label">Контактный телефон</label>
+                            <input type="tel"
+                                   name="phone"
+                                   class="form-control {% if form.phone.errors %}is-invalid{% endif %}"
+                                   placeholder="+375 (XX) XXX-XX-XX"
+                                   value="{{ form.phone.value|default:request.user.phone }}"
+                                   required>
+                            {% for error in form.phone.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Дата доставки</label>
+                            <input type="date"
+                                name="delivery_date"
+                                class="form-control {% if form.delivery_date.errors %}is-invalid{% endif %}"
+                                min="{% now 'Y-m-d' %}"
+                                value="{{ form.delivery_date.value|default:'' }}"
+                            required>
+                            {% for error in form.delivery_date.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">Время доставки</label>
+                            <input type="time"
+                                name="delivery_time"
+                                class="form-control {% if form.delivery_time.errors %}is-invalid{% endif %}"
+                                min="09:00"
+                                max="21:00"
+                                value="{{ form.delivery_time.value|default:'12:00' }}"
+                            required>
+                            {% for error in form.delivery_time.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                            <small class="text-muted">Доставка осуществляется с 9:00 до 21:00</small>
+                        </div>
+
+                        <!-- Кнопка подтверждения -->
+                        <button type="submit" class="btn btn-primary w-100 btn-lg">
+                            <i class="bi bi-check-circle"></i> Подтвердить заказ
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .card {
+        border-radius: 15px;
+    }
+    .card-header {
+        border-radius: 15px 15px 0 0 !important;
+    }
+    .form-control:focus {
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
+</style>
+{% endblock %}

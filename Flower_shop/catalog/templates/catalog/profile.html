@@ -1,0 +1,115 @@
+{% extends 'catalog/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <!-- Левая колонка - данные пользователя -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h4 class="card-title mb-4">Мой профиль</h4>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" value="{{ user.email }}" disabled>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Телефон</label>
+                            <input type="tel" class="form-control" name="phone" value="{{ user.phone }}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Адрес</label>
+                            <textarea class="form-control" name="address" rows="3">{{ user.address }}</textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Сохранить</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Правая колонка - история заказов -->
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h4 class="card-title mb-4">История заказов</h4>
+                    <div class="list-group">
+                        {% for order in orders %}
+                        <div class="list-group-item mb-3">
+                            <div class="d-flex justify-content-between">
+                                <h5>Заказ #{{ order.id }}</h5>
+                                <span class="badge bg-{{ order.status_color }}">{{ order.get_status_display }}</span>
+                            </div>
+                            <p class="text-muted">{{ order.created_at|date:"d.m.Y H:i" }}</p>
+
+                            <!-- Товары в заказе -->
+                            <div class="row g-2 mb-2">
+                                {% for item in order.orderitem_set.all %}
+                                <div class="col-12">
+                                    <div class="card">
+                                        <div class="row g-0">
+                                            <div class="col-3">
+                                                <img src="{{ item.flower.image.url }}" class="img-fluid" alt="{{ item.flower.name }}" height=50 width=50>
+                                            </div>
+                                            <div class="col-9">
+                                                <div class="card-body py-2">
+                                                    <h6>{{ item.flower.name }}</h6>
+                                                    <div class="d-flex justify-content-between">
+                                                        <span>{{ item.quantity }} x {{ item.price }} руб.</span>
+                                                        {% if item.flower.in_stock %}
+                                                        <a href="{% url 'reorder' order.id %}" class="btn btn-sm btn-outline-success">Заказать снова</a>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center">
+                                <strong>Итого: {{ order.total_price }} руб.</strong>
+                                <!-- Повторить -->
+                                <form action="{% url 'reorder' order.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit"
+                                        class="btn btn-outline-success btn-sm"
+                                        {% if not order.can_reorder %}disabled{% endif %}>
+                                        <i class="bi bi-arrow-repeat"></i> Повторить
+                                    </button>
+                                </form>
+
+                                <!-- Отменить -->
+                                <form action="{% url 'cancel_order' order.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit"
+                                        class="btn btn-outline-danger btn-sm"
+                                        {% if not order.can_cancel %}disabled{% endif %}>
+                                        <i class="bi bi-x-circle"></i> Отменить
+                                    </button>
+                                </form>
+
+                                <!-- Детали -->
+                                <form action="{% url 'cancel_order' order.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit"
+                                        class="btn btn-outline-primary btn-sm">
+                                        <a href="{% url 'order_details' order.id %}">
+                                            Детали
+                                        </a>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="alert alert-info">Нет завершенных заказов</div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

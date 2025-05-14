@@ -1,0 +1,40 @@
+<!-- Указываем базовую страницу -->
+{% extends 'catalog/base.html' %}
+
+{% load static %}
+
+{% block extra_css %}
+{% endblock %}
+
+{% block title %}
+	Магазин цветов в Минске
+{% endblock %}
+
+
+<!-- index.html (стилизованный контент) -->
+{% block content %}
+<div class="catalog-back">
+    <div class="nav">
+        {% include 'catalog/catalog_top_nav.html' %}
+    </div>
+
+    <h1 class="catalog-title">Магазин цветов в Минске</h1>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4 mt-4">
+        {% for flower in flowers %}
+	        <div class="col">
+                <div class="card h-100 shadow">
+                    <img src="/media/{{ flower.image }}" class="card-img-top" alt="{{ flower.name }}" height=300px>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ flower.name }}</h5>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="card-text">{{ flower.price }} руб.</span>
+                            <a class="btn btn-bright" href="{% url 'add_to_cart' flower.id %}">Добавить в корзину</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

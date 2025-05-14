@@ -1,0 +1,17 @@
+{% load static %}
+<!-- aside_nav.html (стилизованная боковая панель) -->
+<div class="text-center mb-4">
+    <img src="{% static 'shop/img/tulips.jpeg' %}" alt="Лого"
+         class="aside-img img-fluid rounded-circle mb-3"
+         style="width: 200px; height: 120px; object-fit: cover;">
+    <h3 class="fs-4 text-coffee">Цветы в Минске</h3>
+</div>
+
+<nav class="nav flex-column gap-2">
+    <a class="nav-link btn btn-outline-primary text-start" href="{% url 'shop_home' %}">Главная</a>
+    <a class="nav-link btn btn-outline-primary text-start" href="{% url 'catalog_home' %}">Каталог</a>
+    <a class="nav-link btn btn-outline-primary text-start" href="{% url 'category_flowers' category.id %}">Розы</a>
+    <a class="nav-link btn btn-outline-primary text-start" href="{% url 'category_flowers' category.id %}">Тюльпаны</a>
+    <a class="nav-link btn btn-outline-primary text-start" href="{% url 'category_flowers' category.id %}">Букеты</a>
+    <a class="nav-link btn btn-outline-primary text-start" href="{% url 'category_flowers' category.id %}">Свадебные букеты</a>
+</nav>

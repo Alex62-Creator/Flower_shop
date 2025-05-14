@@ -1,0 +1,52 @@
+{% extends 'catalog/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Ваша корзина</h2>
+    <div class="row">
+        <div class="col-md-8">
+            {% for item in object.items.all %}
+            <div class="card mb-3">
+                <div class="row g-0">
+                    <div class="col-md-3">
+                        <img src="{{ item.flower.image.url }}" class="img-fluid rounded-start" alt="{{ item.flower.name }}">
+                    </div>
+                    <div class="col-md-7">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ item.flower.name }}</h5>
+                            <p class="card-text">{{ item.flower.price }} руб. x {{ item.quantity }}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-2 d-flex align-items-center">
+                        <div class="btn-group">
+                            <form action="{% url 'decrease_quantity' item.id %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-secondary">-</button>
+                            </form>
+                            <form action="{% url 'remove_from_cart' item.id %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-danger">×</button>
+                            </form>
+                            <form action="{% url 'increase_quantity' item.id %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-secondary">+</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Итого</h5>
+                    <p class="h4">{{ total_price }} руб.</p>
+                    <a href="{% url 'checkout' %}" class="btn btn-primary w-100 mt-3">Оформить заказ</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

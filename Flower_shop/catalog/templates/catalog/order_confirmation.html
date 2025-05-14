@@ -1,0 +1,40 @@
+{% block modal %}
+<div class="modal fade" id="orderConfirmationModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">
+                    <i class="bi bi-check2-circle"></i> Заказ оформлен!
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="lead">Ваш заказ №{{ order.id }} успешно оформлен!</p>
+                <div class="alert alert-info">
+                    <i class="bi bi-envelope-check"></i>
+                    Подробности отправлены на {{ order.user.email }}
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-6">
+                        <h6>Дата доставки:</h6>
+                        <p>{{ order.delivery_date|date:"d M Y" }} {{ order.delivery_time|time:"H:i" }}</p>
+                    </div>
+                    <div class="col-6">
+                        <h6>Сумма заказа:</h6>
+                        <p class="text-success fw-bold">{{ order.total_price }} руб.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="{% url 'catalog_home' %}" class="btn btn-outline-secondary">
+                    Вернуться в магазин
+                </a>
+                <a href="{% url 'profile' %}" class="btn btn-primary">
+                    <i class="bi bi-person-circle"></i> Личный кабинет
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

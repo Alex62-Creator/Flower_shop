@@ -1,0 +1,32 @@
+<!-- Указываем базовую страницу -->
+{% extends 'catalog/base.html' %}
+
+{% load static %}
+
+{% block extra_css %}
+{% endblock %}
+
+{% block title %}
+	Магазин цветов в Минске
+{% endblock %}
+
+
+<!-- index.html (стилизованный контент) -->
+{% block content %}
+<div class="content-with-bg">
+    {% if user.is_authenticated %}
+        <div class="nav">
+            {% include 'catalog/index_top_navex.html' %}
+        </div>
+    {% else %}
+        <div class="nav">
+            {% include 'catalog/index_top_nav.html' %}
+        </div>
+    {% endif %}
+
+    <div class="header-container text-center my-5 py-4">
+        <h1 class="display-3 mb-3 fw-bold text-light">Магазин цветов в Минске</h1>
+        <p class="display-6 fw-bold text-light">Всегда большой выбор свежих цветов</p>
+    </div>
+</div>
+{% endblock %}

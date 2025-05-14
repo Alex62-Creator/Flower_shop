@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Заказ №{{ order.id }} оформлен</title>
+</head>
+<body>
+    <h2>Спасибо за заказ, {{ order.user.first_name }}!</h2>
+
+    <div style="margin: 20px 0; padding: 15px; border: 1px solid #e0e0e0;">
+        <h3>Детали заказа:</h3>
+        <p>Номер заказа: <strong>#{{ order.id }}</strong></p>
+        <p>Дата доставки: {{ order.delivery_date|date:"d E Y" }} в {{ order.delivery_time|time:"H:i" }}</p>
+        <p>Адрес: {{ order.delivery_address }}</p>
+        <p>Телефон: {{ order.phone }}</p>
+
+        <h4>Состав заказа:</h4>
+        <ul>
+            {% for item in order.orderitem_set.all %}
+            <li>{{ item.flower.name }} - {{ item.quantity }} шт. × {{ item.price }} руб.</li>
+            {% endfor %}
+        </ul>
+
+        <p style="font-size: 1.2em;">
+            Итого: <span style="color: #28a745;">{{ order.total_price }} руб.</span>
+        </p>
+    </div>
+
+    <p>Статус заказа можно отслеживать в <a href="{{ site_url }}{% url 'profile' %}">личном кабинете</a>.</p>
+</body>
+</html>

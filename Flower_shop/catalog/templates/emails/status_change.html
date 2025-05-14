@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h2>Статус заказа изменен</h2>
+    <p>Здравствуйте, {{ order.user.first_name }}!</p>
+    <p>Статус вашего заказа <strong>№{{ order.id }}</strong> изменен на:
+    <span style="color: #4CAF50;">{{ status_display }}</span></p>
+
+    <h3>Детали заказа:</h3>
+    <ul>
+        <li>Адрес доставки: {{ order.delivery_address }}</li>
+        <li>Дата доставки: {{ order.delivery_date }}</li>
+        <li>Сумма: {{ order.total_price }} руб.</li>
+    </ul>
+</body>
+</html>

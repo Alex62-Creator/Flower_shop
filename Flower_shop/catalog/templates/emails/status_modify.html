@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Статус заказа №{{ order.id }} изменен</title>
+</head>
+<body>
+    <h2>Ваш текущий статус заказа  №{{ order.id }} - {{ status }}!</h2>
+
+
+    <p>Статус заказа можно отслеживать в <a href="{{ site_url }}{% url 'profile' %}">личном кабинете</a>.</p>
+
+</body>
+</html>

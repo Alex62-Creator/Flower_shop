@@ -1,0 +1,87 @@
+{% extends 'catalog/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">
+                <i class="bi bi-file-text"></i>
+                Детали заказа #{{ order.id }}
+            </h2>
+        </div>
+
+        <div class="card-body">
+            <!-- Информация о заказе -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h4>Основная информация:</h4>
+                    <ul class="list-unstyled">
+                        <li><strong>Статус:</strong>
+                            <span class="badge bg-{{ order.status_color }}">
+                                {{ order.get_status_display }}
+                            </span>
+                        </li>
+                        <li><strong>Дата создания:</strong>
+                            {{ order.created_at|date:"d.m.Y H:i" }}</li>
+                        <li><strong>Общая сумма:</strong>
+                            {{ order.total_price }} руб.</li>
+                    </ul>
+                </div>
+
+                <div class="col-md-6">
+                    <h4>Доставка:</h4>
+                    <ul class="list-unstyled">
+                        <li><strong>Адрес:</strong> {{ order.delivery_address }}</li>
+                        <li><strong>Телефон:</strong> {{ order.phone }}</li>
+                        <li><strong>Дата доставки:</strong>
+                            {{ order.delivery_date|date:"d.m.Y" }}</li>
+                        <li><strong>Время доставки:</strong>
+                            {{ order.delivery_time|time:"H:i" }}</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Состав заказа -->
+            <h4 class="mb-3">Состав заказа:</h4>
+            <div class="list-group">
+                {% for item in items %}
+                <div class="list-group-item">
+                    <div class="row align-items-center">
+                        <div class="col-md-2">
+                            <img src="{{ item.flower.image.url }}"
+                                 class="img-fluid rounded"
+                                 alt="{{ item.flower.name }}"
+                                 height=50 width=50>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>{{ item.flower.name }}</h5>
+                            <div class="text-muted">
+                                Артикул: {{ item.flower.id }}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <span class="fw-bold">{{ item.quantity }} шт.</span><br>
+                                    <small>{{ item.price }} руб./шт.</small>
+                                </div>
+                                <span class="text-primary fs-5">
+                                    {{ item.total_price }} руб.
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="card-footer bg-light">
+            <a href="{% url 'profile' %}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Назад к списку заказов
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,13 @@
+<!--Создаём основной шаблон, который будет включать меню и место для отображения флеш-сообщений-->
+    <nav class="navbar navbar-expand-lg">
+        <ul class="navbar-nav ms-auto mb-5 mb-lg-0">
+            <li> <a class="btn btn-bright me-2" href="{% url 'login' %}">Личный кабинет</a>&nbsp;&nbsp;&nbsp;</li>
+            <li> <a class="btn btn-bright me-2" href="{% url 'register' %}">Корзина</a>&nbsp;&nbsp;&nbsp;</li>
+            <li> <form action="{% url 'logout' %}" method="post" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-bright me-2">
+                        <i class="bi bi-box-arrow-right"></i> Выйти
+                    </button>
+                </form>&nbsp;&nbsp;&nbsp;</li>
+        </ul>
+    </nav>
