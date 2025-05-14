@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from .forms import RegisterForm, LoginForm
+from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib import messages
 from .models import Flower, Category, CartItem, Cart, Order, OrderItem
 from django.shortcuts import get_object_or_404
@@ -9,13 +10,14 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.urls import reverse
-from .utils import send_order_email, send_telegram_notification
-import smtplib
+from .utils import send_telegram_notification
+
 
 # Create your views here.
 def index(request):
     categories = Category.objects.all()
     return render(request, 'catalog/index.html', {'categories': categories})
+
 
 def register_view(request):
     if request.method == 'POST':
@@ -29,14 +31,15 @@ def register_view(request):
         form = RegisterForm()
     return render(request, 'catalog/register.html', {'form': form})
 
-from django.contrib.auth.views import LoginView, LogoutView
 
 class CustomLoginView(LoginView):
     form_class = LoginForm
     template_name = 'catalog/login.html'
 
+
 class CustomLogoutView(LogoutView):
     http_method_names = ['post']
+
 
 def catalog_home(request):
     if request.user.is_authenticated:
@@ -47,6 +50,7 @@ def catalog_home(request):
         messages.warning(request, 'Для доступа к этой странице необходимо выполнить вход или зарегистрироваться')
         return render(request, 'catalog/index.html')
 
+
 def category_flowers(request, category_id):
     if request.user.is_authenticated:
         category = get_object_or_404(Category, id=category_id)
@@ -56,6 +60,7 @@ def category_flowers(request, category_id):
     else:
         messages.warning(request, 'Для доступа к этой странице необходимо выполнить вход или зарегистрироваться')
         return render(request, 'catalog/index.html')
+
 
 def add_to_cart(request, flower_id):
     flower = get_object_or_404(Flower, id=flower_id)
@@ -69,26 +74,6 @@ def add_to_cart(request, flower_id):
         cart_item.save()
     return redirect('catalog_home')
 
-
-#class CartView(DetailView):
-    #model = Cart
-    #template_name = 'catalog/cart1.html'
-
-    #def get_object(self):
-        #return self.request.user.cart
-
-#def cart_view(request):
-    #cart = get_object_or_404(Cart, user=request.user)
-    #cart_items = cart.items.all()
-    # Рассчитываем общую сумму
-    #total_price = sum(
-        #item.flower.price * item.quantity
-        #for item in cart_items
-    #)
-    #return render(request, 'catalog/cart1.html', {
-        #'cart_items': cart_items,
-        #'total_price': total_price
-    #})
 
 class CartView(DetailView):
     model = Cart
@@ -110,6 +95,7 @@ class CartView(DetailView):
         )
 
         return context
+
 
 class CheckoutView(CreateView):
     model = Order
@@ -176,6 +162,7 @@ class OrderConfirmationView(LoginRequiredMixin, DetailView):
         context['site_url'] = self.request.build_absolute_uri('/')
         return context
 
+
 class ProfileView(LoginRequiredMixin, TemplateView):
     template_name = 'catalog/profile.html'
 
@@ -193,6 +180,7 @@ class ProfileView(LoginRequiredMixin, TemplateView):
         user.save()
         return redirect('profile')
 
+
 class OrderDetailView(LoginRequiredMixin, DetailView):
     model = Order
     template_name = 'catalog/order_details.html'
@@ -207,6 +195,7 @@ class OrderDetailView(LoginRequiredMixin, DetailView):
         context['items'] = order.orderitem_set.select_related('flower')
         return context
 
+
 def decrease_quantity(request, item_id):
     cart_item = get_object_or_404(
         CartItem,
@@ -220,6 +209,7 @@ def decrease_quantity(request, item_id):
         cart_item.delete()
     return redirect('cart')
 
+
 def increase_quantity(request, item_id):
     cart_item = get_object_or_404(
         CartItem,
@@ -229,6 +219,7 @@ def increase_quantity(request, item_id):
     cart_item.quantity += 1
     cart_item.save()
     return redirect('cart')
+
 
 def remove_from_cart(request, item_id):
     cart_item = get_object_or_404(
