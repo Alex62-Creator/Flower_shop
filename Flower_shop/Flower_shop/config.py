@@ -1,0 +1,2 @@
+EMAIL_HOST_PASSWORD = "iafbQx2bBJXK9fZGbSmr"
+EMAIL_HOST_USER = 'cham62@mail.ru'
